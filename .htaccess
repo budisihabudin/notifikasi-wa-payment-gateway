@@ -1,0 +1,27 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?/$1 [L]
+
+# Disallow access to certain file types (optional)
+<FilesMatch "\.(env|ini|sh|bat|sql|json|md|xml)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Blokir akses ke folder sensitif
+    RewriteRule ^(application|system|vendor|database|dokumentask) - [F,L,NC]
+    
+    # Blokir akses langsung ke file sensitif seperti .env, .htaccess, dan file konfigurasi lainnya
+    <FilesMatch "\.(env|ini|sh|bat|sql|json|xml|log|md)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+<FilesMatch "^(phpinfo\.php|license\.txt|composer\.lock)$">
+    Require all denied
+</FilesMatch>
